@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  # App backend service
+  api:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/me-conta
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD:
+      PORT: 3000
+      NODE_ENV: production
+    networks:
+      - backend
+
+  # Database Service (postgres)
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: 'me-conta'
+      POSTGRES_USER: 'root'
+      POSTGRES_HOST_AUTH_METHOD: 'trust'
+    ports:
+      - '5432:5432'
+    expose:
+      - '5432'
+    volumes:
+      - me-conta-data:/var/lib/database
+    networks:
+      - backend
+volumes:
+  me-conta-data:
+networks:
+  backend:
