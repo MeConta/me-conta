@@ -1,6 +1,21 @@
 version: '3.7'
 
 services:
+  # App frontend service
+  front:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8888:3000"
+    restart: always
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    networks:
+      - frontend
   # App backend service
   api:
     build:
@@ -19,6 +34,7 @@ services:
       NODE_ENV: production
     networks:
       - backend
+      - frontend
 
   # Database Service (postgres)
   db:
@@ -40,3 +56,4 @@ volumes:
   me-conta-data:
 networks:
   backend:
+  frontend:
