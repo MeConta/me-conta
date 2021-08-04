@@ -35,7 +35,6 @@ services:
     networks:
       - backend
       - frontend
-
   # Database Service (postgres)
   db:
     image: postgres:latest
