@@ -23,6 +23,12 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+      - name: install dependencies for backend
+        working-directory: backend
+        run: npm ci
+      - name: run tests
+        working-directory: backend
+        run: npm run test:cov
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
