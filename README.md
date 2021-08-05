@@ -6,6 +6,10 @@ Wrapper do projeto **Me conta?**.
 > Começe por aqui para iniciar o desenvolvimento!
 
 ---
+| Quality                                                                                                                                                                      | Frontend                                                                                                        | Backend                                                                                                       |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MeConta_me-conta&metric=alert_status)](https://sonarcloud.io/dashboard?id=MeConta_me-conta) | [![Heroku](https://heroku-badge.herokuapp.com/?app=me-conta-frontend)](https://me-conta-frontend.herokuapp.com) | [![Heroku](https://heroku-badge.herokuapp.com/?app=me-conta-backend)](https://me-conta-backend.herokuapp.com) |
+---
 
 ## :warning: Requerimentos ##
 
