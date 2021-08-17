@@ -59,12 +59,18 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:login
 
-      - name: Push Container to Heroku
+      - name: Build docker image
         working-directory: frontend
-        env: 
+        env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:push -a ${{ secrets.HEROKU_FRONTEND_APP_NAME }} web
-        
+        run: |
+          docker build . -f Dockerfile.web -t frontend
+          docker tag frontend registry.heroku.com/${{ secrets.HEROKU_FRONTEND_APP_NAME }}/web
+      - name: Push docker image to Heroku
+        working-directory: frontend
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: docker push registry.heroku.com/${{ secrets.HEROKU_FRONTEND_APP_NAME }}/web
       - name: Release to Heroku
         working-directory: frontend
         env: 
@@ -83,28 +89,28 @@ jobs:
         - uses: actions/checkout@v2
           with: 
             submodules: recursive
-      
         - name: Login no Heroku Container
           working-directory: frontend
           env: 
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           run: heroku container:login
-
         - name: Build Docker image
           working-directory: frontend
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           run: |
             docker build . -f Dockerfile.storybook -t storybook
-            docker tag storybook registry.heroku.com/me-conta-storybook/web
-            docker push registry.heroku.com/me-conta-storybook/web
+            docker tag storybook registry.heroku.com/${{ secrets.HEROKU_STORYBOOK_APP_NAME }}/web
+        - name: Push Docker image to Heroku
+          working-directory: frontend
+          env:
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          run: docker push registry.heroku.com/${{ secrets.HEROKU_STORYBOOK_APP_NAME }}/web
         - name: Release to Heroku
           working-directory: frontend
           env: 
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           run: heroku container:release -a ${{ secrets.HEROKU_STORYBOOK_APP_NAME }} web
-          
-
   backend:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
