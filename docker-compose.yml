@@ -1,6 +1,19 @@
 version: '3.7'
 
 services:
+  # App storybook service
+  storybook:
+    build:
+      context: frontend
+      dockerfile: ./.storybook/Dockerfile
+      target: storybook
+    ports:
+      - "6006:8080"
+    restart: always
+    environment:
+      PORT: 8080
+    networks:
+      - frontend
   # App frontend service
   front:
     build:
