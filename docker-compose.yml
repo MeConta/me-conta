@@ -5,7 +5,7 @@ services:
   storybook:
     build:
       context: frontend
-      dockerfile: ./.storybook/Dockerfile
+      dockerfile: ./Dockerfile.storybook
       target: storybook
     ports:
       - "6006:8080"
@@ -18,7 +18,7 @@ services:
   front:
     build:
       context: frontend
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile.web
     ports:
       - "8888:3000"
     restart: always

@@ -85,19 +85,21 @@ jobs:
             submodules: recursive
       
         - name: Login no Heroku Container
-          working-directory: frontend/.storybook
+          working-directory: frontend
           env: 
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           run: heroku container:login
 
-        - name: Push Container to Heroku
-          working-directory: frontend/.storybook
-          env: 
+        - name: Build Docker image
+          working-directory: frontend
+          env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          run: heroku container:push -a ${{ secrets.HEROKU_STORYBOOK_APP_NAME }} web
-          
+          run: |
+            docker build . -f Dockerfile.storybook -t storybook
+            docker tag storybook registry.heroku.com/me-conta-storybook/web
+            docker push registry.heroku.com/me-conta-storybook/web
         - name: Release to Heroku
-          working-directory: frontend/.storybook
+          working-directory: frontend
           env: 
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           run: heroku container:release -a ${{ secrets.HEROKU_STORYBOOK_APP_NAME }} web
