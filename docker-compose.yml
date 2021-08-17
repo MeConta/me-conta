@@ -18,7 +18,7 @@ services:
   front:
     build:
       context: frontend
-      dockerfile: ./Dockerfile.web
+      dockerfile: ./Dockerfile
     ports:
       - "8888:3000"
     restart: always
