@@ -31,7 +31,7 @@ jobs:
       - name: BACKEND - Run Tests
         working-directory: backend
         run: npm run test:cov
-      - name: BACKEND - Archive testes coverage
+      - name: BACKEND - Archive tests coverage
         uses: actions/upload-artifact@v2
         with:
           name: cov-files-backend
@@ -47,7 +47,7 @@ jobs:
       - name: FRONTEND - Run tests
         working-directory: frontend
         run: npm run coverage
-      - name: FRONTEND - Archive testes coverage
+      - name: FRONTEND - Archive tests coverage
         uses: actions/upload-artifact@v2
         with:
           name: cov-files-frontend
@@ -65,6 +65,9 @@ jobs:
     needs:
       - build
     steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - name: BACKEND - Download coverage results
         uses: actions/download-artifact@v2
         with:
