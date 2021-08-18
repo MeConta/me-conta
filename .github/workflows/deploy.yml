@@ -18,40 +18,40 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-        submodules: recursive
-    - name: Install Dependencies
-      uses: bahmutov/npm-install@v1
-      with:
-        working-directory: |
-          backend
-          frontend
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Install Dependencies
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: |
+            backend
+            frontend
       - name: BACKEND - Run Tests
-          working-directory: backend
-          run: npm run test:cov
+        working-directory: backend
+        run: npm run test:cov
       - name: BACKEND - Archive testes coverage
-          uses: actions/upload-artifact@v2
-          with:
-            name: cov-files-backend
-            path: ./backend/coverage/
+        uses: actions/upload-artifact@v2
+        with:
+          name: cov-files-backend
+          path: ./backend/coverage/
       - name: BACKEND - Build
         working-directory: backend
         run: npm run build
       - name: BACKEND - Archive build
-          uses: actions/upload-artifact@v2
-          with:
-            name: dist-files-backend
-            path: ./backend/dist/
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-files-backend
+          path: ./backend/dist/
       - name: FRONTEND - Run tests
-          working-directory: frontend
-          run: npm run coverage
+        working-directory: frontend
+        run: npm run coverage
       - name: FRONTEND - Archive testes coverage
-          uses: actions/upload-artifact@v2
-          with:
-            name: cov-files-frontend
-            path: ./frontend/coverage/
+        uses: actions/upload-artifact@v2
+        with:
+          name: cov-files-frontend
+          path: ./frontend/coverage/
       - name: FRONTEND - Build
         working-directory: frontend
         run: npm run build
