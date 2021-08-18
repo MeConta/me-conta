@@ -39,7 +39,8 @@ jobs:
           submodules: recursive
       - name: Backend - run tests
         uses: bahmutov/npm-install@v1
-        working-directory: backend
+        with:
+          working-directory: backend
         run: npm run test:cov
       - name: Frontend - run tests
         working-directory: frontend
@@ -116,11 +117,13 @@ jobs:
       - cache
       - analysis
     steps:
-      - name: Perform migrations
+      - name: Install dependencies
         uses: bahmutov/npm-install@v1
-        working-directory: backend
+        with:
+          working-directory: backend
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - name: Perform migrations
         run: npm run typeorm:migration:run
   backend:
     runs-on: ubuntu-latest
