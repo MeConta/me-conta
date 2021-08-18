@@ -37,12 +37,16 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      - name: Backend - run tests
+      - name: Install dependencies
         uses: bahmutov/npm-install@v1
         with:
-          working-directory: backend
+          working-directory: |
+            backend
+            frontend
+      - name: Backend - Run Tests
+        working-directory: backend
         run: npm run test:cov
-      - name: Frontend - run tests
+      - name: Frontend - Run tests
         working-directory: frontend
         run: npm run coverage
       - name: SonarCloud Scan
@@ -124,6 +128,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
       - name: Perform migrations
+        working-directory: backend
         run: npm run typeorm:migration:run
   backend:
     runs-on: ubuntu-latest
