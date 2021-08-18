@@ -15,23 +15,32 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  analysis:
-    name: SonarCloud
+  cache:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
           submodules: recursive
-      - name: Backend - install dependencies
-        working-directory: backend
-        run: npm ci
+      - name: Cache dependencies
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: |
+            frontend
+            backend
+  analysis:
+    needs:
+      - cache
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: recursive
       - name: Backend - run tests
+        uses: bahmutov/npm-install@v1
         working-directory: backend
         run: npm run test:cov
-      - name: Frontend - install dependencies
-        working-directory: frontend
-        run: npm ci
       - name: Frontend - run tests
         working-directory: frontend
         run: npm run coverage
@@ -40,25 +49,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   frontend:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs:
       - analysis
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with: 
           submodules: recursive
-    
       - name: Login no Heroku Container
         working-directory: frontend
         env: 
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:login
-
       - name: Build docker image
         working-directory: frontend
         env:
@@ -76,16 +80,11 @@ jobs:
         env: 
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:release -a ${{ secrets.HEROKU_FRONTEND_APP_NAME }} web
-
   storybook:
-      # The type of runner that the job will run on
       runs-on: ubuntu-latest
       needs:
         - analysis
-
-      # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
-        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         - uses: actions/checkout@v2
           with: 
             submodules: recursive
@@ -111,18 +110,28 @@ jobs:
           env: 
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           run: heroku container:release -a ${{ secrets.HEROKU_STORYBOOK_APP_NAME }} web
-  backend:
-    # The type of runner that the job will run on
+  migration:
     runs-on: ubuntu-latest
     needs:
+      - cache
       - analysis
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Perform migrations
+        uses: bahmutov/npm-install@v1
+        working-directory: backend
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npm run typeorm:migration:run
+  backend:
+    runs-on: ubuntu-latest
+    needs:
+      - cache
+      - analysis
+      - migration
+    steps:
       - uses: actions/checkout@v2
         with: 
           submodules: recursive
-    
       - name: Login no Heroku Container
         working-directory: backend
         env: 
