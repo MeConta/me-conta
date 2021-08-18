@@ -40,11 +40,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_HOST: db
-      DATABASE_PORT: 5432
-      DATABASE_NAME: me-conta
-      DATABASE_USERNAME: postgres
-      DATABASE_PASSWORD:
+      DATABASE_URL: postgres://postgres:@db:5432/me-conta
       PORT: 3000
       NODE_ENV: development
     networks:
