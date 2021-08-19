@@ -36,14 +36,6 @@ jobs:
         with:
           name: cov-files-backend
           path: ./backend/coverage/
-      - name: BACKEND - Build
-        working-directory: backend
-        run: npm run build
-      - name: BACKEND - Archive build
-        uses: actions/upload-artifact@v2
-        with:
-          name: dist-files-backend
-          path: ./backend/dist/
       - name: FRONTEND - Run tests
         working-directory: frontend
         run: npm run coverage
@@ -52,14 +44,6 @@ jobs:
         with:
           name: cov-files-frontend
           path: ./frontend/coverage/
-      - name: FRONTEND - Build
-        working-directory: frontend
-        run: npm run build
-      - name: FRONTEND - Archive artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: dist-files-frontend
-          path: ./frontend/.next/
   analysis:
     runs-on: ubuntu-latest
     needs:
@@ -154,10 +138,9 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           working-directory: backend
-      - name: BACKEND - Download build artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: dist-files-backend
+      - name: BACKEND - Build
+        working-directory: backend
+        run: npm run build
       - name: Perform migrations
         working-directory: backend
         env:
