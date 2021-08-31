@@ -39,16 +39,10 @@ services:
     restart: always
     depends_on:
       - db
+    env_file:
+      - backend/.env
     environment:
       DATABASE_URL: postgres://postgres:@db:5432/me-conta
-      PORT: 3000
-      NODE_ENV: development
-      EMAIL_SMTP_HOST:
-      EMAIL_SMTP_PORT: 465
-      EMAIL_SMTP_USERNAME:
-      EMAIL_SMTP_PASSWORD:
-      EMAIL_FROM:
-      EMAIL_CONTACT_TO:
     networks:
       - backend
       - frontend
