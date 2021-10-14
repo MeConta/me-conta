@@ -6,34 +6,34 @@ on:
     branches: [ main ]
   workflow_dispatch:
 jobs:
-  analysis:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
-          fetch-depth: 0
-      - name: Install Dependencies
-        uses: bahmutov/npm-install@v1
-        with:
-          working-directory: |
-            backend
-            frontend
-      - name: BACKEND - Run Tests
-        working-directory: backend
-        run: npm run test:cov
-      - name: FRONTEND - Run Tests
-        working-directory: frontend
-        run: npm run coverage
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#  analysis:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          submodules: recursive
+#          fetch-depth: 0
+#      - name: Install Dependencies
+#        uses: bahmutov/npm-install@v1
+#        with:
+#          working-directory: |
+#            backend
+#            frontend
+#      - name: BACKEND - Run Tests
+#        working-directory: backend
+#        run: npm run test:cov
+#      - name: FRONTEND - Run Tests
+#        working-directory: frontend
+#        run: npm run coverage
+#      - name: SonarCloud Scan
+#        uses: SonarSource/sonarcloud-github-action@master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   frontend:
     runs-on: ubuntu-latest
-    needs:
-      - analysis
+#    needs:
+#      - analysis
     steps:
       - uses: actions/checkout@v2
         with: 
@@ -47,8 +47,10 @@ jobs:
         working-directory: frontend
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          NODE_ENV: production
+          API_URL: ${{ secrets.API_URL }}
         run: |
-          docker build . -f Dockerfile.web -t frontend
+          docker build . -f Dockerfile.web -t frontend --build-arg NODE_ENV --build-arg API_URL
           docker tag frontend registry.heroku.com/${{ secrets.HEROKU_FRONTEND_APP_NAME }}/web
       - name: Push docker image to Heroku
         working-directory: frontend
@@ -60,79 +62,78 @@ jobs:
         env: 
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:release -a ${{ secrets.HEROKU_FRONTEND_APP_NAME }} web
-  storybook:
-      runs-on: ubuntu-latest
-      needs:
-        - analysis
-      steps:
-        - uses: actions/checkout@v2
-          with: 
-            submodules: recursive
-        - name: Login no Heroku Container
-          working-directory: frontend
-          env: 
-            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          run: heroku container:login
-        - name: Build Docker image
-          working-directory: frontend
-          env:
-            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          run: |
-            docker build . -f Dockerfile.storybook -t storybook
-            docker tag storybook registry.heroku.com/${{ secrets.HEROKU_STORYBOOK_APP_NAME }}/web
-        - name: Push Docker image to Heroku
-          working-directory: frontend
-          env:
-            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          run: docker push registry.heroku.com/${{ secrets.HEROKU_STORYBOOK_APP_NAME }}/web
-        - name: Release to Heroku
-          working-directory: frontend
-          env: 
-            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          run: heroku container:release -a ${{ secrets.HEROKU_STORYBOOK_APP_NAME }} web
-  migration:
-    runs-on: ubuntu-latest
-    needs:
-      - analysis
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          submodules: recursive
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
-        with:
-          working-directory: backend
-      - name: BACKEND - Build
-        working-directory: backend
-        run: npm run build
-      - name: Perform migrations
-        working-directory: backend
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NODE_ENV: production
-        run: npm run typeorm:migration:run
-  backend:
-    runs-on: ubuntu-latest
-    needs:
-      - analysis
-      - migration
-    steps:
-      - uses: actions/checkout@v2
-        with: 
-          submodules: recursive
-      - name: Login no Heroku Container
-        working-directory: backend
-        env: 
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:login
-      - name: Push Container to Heroku
-        working-directory: backend
-        env: 
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:push -a ${{ secrets.HEROKU_BACKEND_APP_NAME }} web
-      - name: Release to Heroku
-        working-directory: backend
-        env: 
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:release -a ${{ secrets.HEROKU_BACKEND_APP_NAME }} web
+#  storybook:
+#      runs-on: ubuntu-latest
+#      needs:
+#        - analysis
+#      steps:
+#        - uses: actions/checkout@v2
+#          with:
+#            submodules: recursive
+#        - name: Login no Heroku Container
+#          working-directory: frontend
+#          env:
+#            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+#          run: heroku container:login
+#        - name: Build Docker image
+#          working-directory: frontend
+#          env:
+#            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+#          run: |
+#            docker build . -f Dockerfile.storybook -t storybook
+#            docker tag storybook registry.heroku.com/${{ secrets.HEROKU_STORYBOOK_APP_NAME }}/web
+#        - name: Push Docker image to Heroku
+#          working-directory: frontend
+#          env:
+#            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+#          run: docker push registry.heroku.com/${{ secrets.HEROKU_STORYBOOK_APP_NAME }}/web
+#        - name: Release to Heroku
+#          working-directory: frontend
+#          env:
+#            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+#          run: heroku container:release -a ${{ secrets.HEROKU_STORYBOOK_APP_NAME }} web
+#  migration:
+#    runs-on: ubuntu-latest
+#    needs:
+#      - analysis
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0
+#          submodules: recursive
+#      - name: Install dependencies
+#        uses: bahmutov/npm-install@v1
+#        with:
+#          working-directory: backend
+#      - name: BACKEND - Build
+#        working-directory: backend
+#        run: npm run build
+#      - name: Perform migrations
+#        working-directory: backend
+#        env:
+#          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+#        run: npm run typeorm:migration:run
+#  backend:
+#    runs-on: ubuntu-latest
+#    needs:
+#      - analysis
+#      - migration
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          submodules: recursive
+#      - name: Login no Heroku Container
+#        working-directory: backend
+#        env:
+#          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+#        run: heroku container:login
+#      - name: Push Container to Heroku
+#        working-directory: backend
+#        env:
+#          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+#        run: heroku container:push -a ${{ secrets.HEROKU_BACKEND_APP_NAME }} web
+#      - name: Release to Heroku
+#        working-directory: backend
+#        env:
+#          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+#        run: heroku container:release -a ${{ secrets.HEROKU_BACKEND_APP_NAME }} web

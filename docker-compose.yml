@@ -27,6 +27,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
+      API_URL: backend:3000
     networks:
       - frontend
   # App backend service
