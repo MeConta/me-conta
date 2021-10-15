@@ -46,7 +46,7 @@ jobs:
           NODE_ENV: production
           API_URL: ${{ secrets.API_URL }}
         with:
-          args: ". -f Dockerfile.web -t frontend"
+          args: "-f Dockerfile.web -t frontend"
           cache_key: "${{ hashFiles('./package-lock.json') }}"
       - name: Tag Docker Image
         run: |
@@ -87,7 +87,7 @@ jobs:
           env:
             NODE_ENV: production
           with:
-            args: ". -f Dockerfile.storybook -t storybook"
+            args: "-f Dockerfile.storybook -t storybook"
             cache_key: "${{ hashFiles('./package-lock.json') }}"
         - name: Tag Docker Image
           run: |
@@ -150,7 +150,7 @@ jobs:
         env:
           NODE_ENV: production
         with:
-          args: ". -f Dockerfile -t backend"
+          args: "-f Dockerfile -t backend"
           cache_key: "${{ hashFiles('./package-lock.json') }}"
       - name: Tag Docker Image
         run: docker tag frontend registry.heroku.com/${{ secrets.HEROKU_BACKEND_APP_NAME }}/web
