@@ -32,6 +32,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   frontend:
     runs-on: ubuntu-latest
+    env:
+      working-directory: frontend
     needs:
       - analysis
     steps:
@@ -46,7 +48,6 @@ jobs:
         with:
           args: ". -f Dockerfile.web -t frontend"
           cache_key: "${{ hashFiles('./package-lock.json') }}"
-          working-directory: frontend
       - name: Tag Docker Image
         run: |
           docker tag frontend registry.heroku.com/${{ secrets.HEROKU_FRONTEND_APP_NAME }}/web
@@ -60,22 +61,21 @@ jobs:
 #          docker build . -f Dockerfile.web -t frontend --build-arg NODE_ENV --build-arg API_URL
 #          docker tag frontend registry.heroku.com/${{ secrets.HEROKU_FRONTEND_APP_NAME }}/web
       - name: Login no Heroku Container
-        working-directory: frontend
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:login
       - name: Push docker image to Heroku
-        working-directory: frontend
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: docker push registry.heroku.com/${{ secrets.HEROKU_FRONTEND_APP_NAME }}/web
       - name: Release to Heroku
-        working-directory: frontend
         env: 
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:release -a ${{ secrets.HEROKU_FRONTEND_APP_NAME }} web
   storybook:
       runs-on: ubuntu-latest
+      env:
+        working-directory: frontend
       needs:
         - analysis
       steps:
@@ -89,12 +89,10 @@ jobs:
           with:
             args: ". -f Dockerfile.storybook -t storybook"
             cache_key: "${{ hashFiles('./package-lock.json') }}"
-            working-directory: frontend
         - name: Tag Docker Image
           run: |
             docker tag storybook registry.heroku.com/${{ secrets.HEROKU_STORYBOOK_APP_NAME }}/web
         - name: Login no Heroku Container
-          working-directory: frontend
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           run: heroku container:login
@@ -106,17 +104,17 @@ jobs:
 #            docker build . -f Dockerfile.storybook -t storybook
 #            docker tag storybook registry.heroku.com/${{ secrets.HEROKU_STORYBOOK_APP_NAME }}/web
         - name: Push Docker image to Heroku
-          working-directory: frontend
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           run: docker push registry.heroku.com/${{ secrets.HEROKU_STORYBOOK_APP_NAME }}/web
         - name: Release to Heroku
-          working-directory: frontend
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           run: heroku container:release -a ${{ secrets.HEROKU_STORYBOOK_APP_NAME }} web
   migration:
     runs-on: ubuntu-latest
+    env:
+      working-directory: backend
     needs:
       - analysis
     steps:
@@ -126,18 +124,16 @@ jobs:
           submodules: recursive
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
-        with:
-          working-directory: backend
       - name: BACKEND - Build
-        working-directory: backend
         run: npm run build
       - name: Perform migrations
-        working-directory: backend
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npm run typeorm:migration:run
   backend:
     runs-on: ubuntu-latest
+    env:
+      working-directory: backend
     needs:
       - analysis
       - migration
@@ -146,7 +142,6 @@ jobs:
         with:
           submodules: recursive
       - name: Login no Heroku Container
-        working-directory: backend
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:login
@@ -157,16 +152,13 @@ jobs:
         with:
           args: ". -f Dockerfile -t backend"
           cache_key: "${{ hashFiles('./package-lock.json') }}"
-          working-directory: frontend
       - name: Tag Docker Image
         run: docker tag frontend registry.heroku.com/${{ secrets.HEROKU_BACKEND_APP_NAME }}/web
       - name: Push Docker image to Heroku
-        working-directory: backend
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: docker push registry.heroku.com/${{ secrets.HEROKU_BACKEND_APP_NAME }}/web
       - name: Release to Heroku
-        working-directory: backend
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:release -a ${{ secrets.HEROKU_BACKEND_APP_NAME }} web
