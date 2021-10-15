@@ -46,6 +46,7 @@ jobs:
         with:
           args: ". -f Dockerfile.web -t frontend"
           cache_key: "${{ hashFiles('./package-lock.json') }}"
+          working-directory: frontend
       - name: Tag Docker Image
         run: |
           docker tag frontend registry.heroku.com/${{ secrets.HEROKU_FRONTEND_APP_NAME }}/web
@@ -85,10 +86,10 @@ jobs:
           uses: mattes/cached-docker-build-action@v1
           env:
             NODE_ENV: production
-            API_URL: ${{ secrets.API_URL }}
           with:
             args: ". -f Dockerfile.storybook -t storybook"
             cache_key: "${{ hashFiles('./package-lock.json') }}"
+            working-directory: frontend
         - name: Tag Docker Image
           run: |
             docker tag storybook registry.heroku.com/${{ secrets.HEROKU_STORYBOOK_APP_NAME }}/web
@@ -156,6 +157,7 @@ jobs:
         with:
           args: ". -f Dockerfile -t backend"
           cache_key: "${{ hashFiles('./package-lock.json') }}"
+          working-directory: frontend
       - name: Tag Docker Image
         run: docker tag frontend registry.heroku.com/${{ secrets.HEROKU_BACKEND_APP_NAME }}/web
       - name: Push Docker image to Heroku
