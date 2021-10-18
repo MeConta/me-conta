@@ -112,6 +112,7 @@ jobs:
         working-directory: backend
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NODE_ENV: production
         run: npm run typeorm:migration:run
   backend:
     runs-on: ubuntu-latest
