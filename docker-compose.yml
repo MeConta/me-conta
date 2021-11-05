@@ -1,54 +1,6 @@
 version: '3.8'
 
 services:
-  # App storybook service
-  storybook:
-    build:
-      context: frontend
-      dockerfile: ./Dockerfile.storybook
-      target: storybook
-    ports:
-      - "6006:8080"
-    restart: always
-    environment:
-      PORT: 8080
-    networks:
-      - frontend
-  # App frontend service
-  front:
-    build:
-      context: frontend
-      dockerfile: ./Dockerfile.web
-    ports:
-      - "8888:3000"
-    restart: always
-    depends_on:
-      - api
-    environment:
-      NODE_ENV: production
-      PORT: 3000
-      API_URL: backend:3000
-    networks:
-      - frontend
-  # App backend service
-  api:
-    build:
-      context: backend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    restart: always
-    depends_on:
-      - db
-    env_file:
-      - backend/.env
-      - backend/.env.local
-    environment:
-      DATABASE_URL: postgres://postgres:@db:5432/me-conta
-    networks:
-      - backend
-      - frontend
-
   # Database Service (postgres)
   db:
     image: postgres:latest
@@ -65,6 +17,74 @@ services:
       - me-conta-data:/var/lib/database
     networks:
       - backend
+
+  # Migration Service
+  migration:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+      target: migration
+    depends_on:
+      - db
+    env_file:
+      - backend/.env
+      - backend/.env.local
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://postgres:@db:5432/me-conta
+    networks:
+      - backend
+
+  # App backend service
+  api:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - backend/.env
+      - backend/.env.local
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://postgres:@db:5432/me-conta
+    networks:
+      - backend
+      - frontend
+
+  # App storybook service
+  storybook:
+    build:
+      context: frontend
+      dockerfile: ./Dockerfile.storybook
+      target: storybook
+    ports:
+      - "6006:8080"
+    restart: always
+    environment:
+      PORT: 8080
+    networks:
+      - frontend
+
+  # App frontend service
+  front:
+    build:
+      context: frontend
+      dockerfile: ./Dockerfile.web
+    ports:
+      - "8888:3000"
+    restart: always
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      API_URL: backend:3000
+    networks:
+      - frontend
 volumes:
   me-conta-data:
 networks:
