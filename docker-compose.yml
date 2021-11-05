@@ -42,11 +42,13 @@ services:
       - db
     env_file:
       - backend/.env
+      - backend/.env.local
     environment:
       DATABASE_URL: postgres://postgres:@db:5432/me-conta
     networks:
       - backend
       - frontend
+
   # Database Service (postgres)
   db:
     image: postgres:latest
