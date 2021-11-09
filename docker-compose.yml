@@ -30,7 +30,7 @@ services:
       - backend/.env
       - backend/.env.local
     environment:
-      NODE_ENV: production
+      NODE_ENV: docker
       DATABASE_URL: postgres://postgres:@db:5432/me-conta
     networks:
       - backend
@@ -49,7 +49,7 @@ services:
       - backend/.env
       - backend/.env.local
     environment:
-      NODE_ENV: production
+      NODE_ENV: docker
       DATABASE_URL: postgres://postgres:@db:5432/me-conta
     networks:
       - backend
