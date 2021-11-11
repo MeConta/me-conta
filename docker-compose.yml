@@ -22,7 +22,7 @@ services:
   migration:
     build:
       context: backend
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile.migration
       target: migration
     depends_on:
       - db
@@ -75,7 +75,7 @@ services:
       context: frontend
       dockerfile: ./Dockerfile.web
     ports:
-      - "8888:3000"
+      - "3005:3000"
     restart: always
     depends_on:
       - api
