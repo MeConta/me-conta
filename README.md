@@ -28,15 +28,32 @@ git clone --recursive https://github.com/MeConta/me-conta.git
 
 ## :whale: Rodar com o Docker compose ##
 
-Na pasta do projeto:
-```bash
-docker compose up
-```
+- Crie o arquivo `.env.local` para os projetos **frontend** e **backend** preenchendo as variáveis faltantes no `.env`
+> Para o **backend** `.env` não possuí os dados de **ADMIN** nem **SMTP**
 
-> O backend deverá abrir na porta **3000**
+> Para o **frontend**, adicionar o link do backend (http://localhost:3000) ou do Heroku
 
-> O frontend deverá abrir na porta **8888**
+- Na pasta do projeto:
+    - Faça a migração do banco de dados (se necessário):
+      ```bash
+      docker compose run --rm migration
+      ```
+    - Inicie o backend:
+      ```bash
+      docker compose up -d api
+      ```
+    - Inicie o frontend: Na pasta do projeto:
+    ```bash
+      docker compose up -d front
+    ```
 
+---
+    
+| Backend                                  | Frontend                                  |
+|------------------------------------------|-------------------------------------------|
+| O backend deverá abrir na porta **3000** | O frontend deverá abrir na porta **3005** |
+
+---
 
 ## :robot: Deploy ##
 
@@ -46,16 +63,14 @@ Por meio do [Github Actions](https://github.com/features/actions) todos os **com
 Os projetos de [Frontend](https://github.com/MeConta/me-conta-frontend) e [Backend](https://github.com/MeConta/me-conta-backend) serão disponibilizados no [Heroku](https://heroku.com)
 
 ---
-
-> Link do Heroku [Backend](https://me-conta-backend.herokuapp.com)
-
-> Link do Heroku [Frontend](https://me-conta-frontend.herokuapp.com) 
-
-> Link do Heroku [Storybook](https://me-conta-storybook.herokuapp.com) 
+### Links do **Heroku** ###
+| BACKEND                                          | FRONTEND                                            | HEROKU                                                |
+|--------------------------------------------------|-----------------------------------------------------|-------------------------------------------------------|
+| [Backend](https://me-conta-backend.herokuapp.com)| [Frontend](https://me-conta-frontend.herokuapp.com) | [Storybook](https://me-conta-storybook.herokuapp.com) | 
 
 ---
 
-## Atualizando a codebase
+## Atualizando a codebase ##
 
 Para atualizar os submodules ao dar pull utilizar:
 
