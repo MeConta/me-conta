@@ -4,7 +4,6 @@ services:
   # Database Service (postgres)
   db:
     image: postgres:latest
-    restart: always
     user: postgres
     environment:
       POSTGRES_DB: 'me-conta'
@@ -42,7 +41,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    restart: always
     depends_on:
       - db
     env_file:
@@ -62,8 +60,7 @@ services:
       dockerfile: ./Dockerfile.storybook
       target: storybook
     ports:
-      - "6006:8080"
-    restart: always
+      - "6006:80"
     environment:
       PORT: 8080
     networks:
@@ -74,11 +71,11 @@ services:
     build:
       context: frontend
       dockerfile: ./Dockerfile.web
+      args:
+        NODE_ENV: production
+        API_URL: backend:3000
     ports:
       - "3005:3000"
-    restart: always
-    depends_on:
-      - api
     environment:
       NODE_ENV: production
       PORT: 3000
