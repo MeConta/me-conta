@@ -73,13 +73,13 @@ services:
       dockerfile: ./Dockerfile.web
       args:
         NODE_ENV: production
-        API_URL: backend:3000
+        API_URL: http://localhost:3000
     ports:
-      - "3005:3000"
+      - "3005:3005"
     environment:
       NODE_ENV: production
-      PORT: 3000
-      API_URL: backend:3000
+      PORT: 3005
+      # API_URL: backend:3000
     networks:
       - frontend
 volumes:
