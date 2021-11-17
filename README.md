@@ -3,7 +3,7 @@
 
 Wrapper do projeto **Me conta?**.
 
-> Começe por aqui para iniciar o desenvolvimento!
+> Comece por aqui para iniciar o desenvolvimento!
 
 ---
 | Quality                                                                                                                                                                      | Frontend                                                                                                        | Backend                                                                                                       |
@@ -16,7 +16,9 @@ Wrapper do projeto **Me conta?**.
 * [Node](https://nodejs.org/)
 * [Docker](https://www.docker.com/products/docker-desktop)
 * ~~[Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)~~
-(Não é **necessário**, mas interessante)
+(Não é **necessário**)
+
+---
 
 ## :package: Instalação ##
 
@@ -25,33 +27,54 @@ Clone este repositório com a opção **--recursive**
 ```bash
 git clone --recursive https://github.com/MeConta/me-conta.git
 ```
+Nos subprojetos, atualize para as `main`
+- frontend:
+```bash
+cd ./frontend
+```
+```bash
+git checkout origin main
+```
+- backend:
+```bash
+cd ./backend
+```
+```bash
+git checkout origin main
+```
+
+### .env
+Para desenvolvimento local, é necessário criar os arquivos `.env.local` correspondentes
+> Para o **frontend**, adicionar o _link_ do backend [local](http://localhost:3000) ou do [Heroku](https://me-conta-backend.herokuapp.com)
+
+> Para o **backend** `.env` não possui os dados de **ADMIN** nem **SMTP**
+
+---
 
 ## :whale: Rodar com o Docker compose ##
 
-- Crie o arquivo `.env.local` para os projetos **frontend** e **backend** preenchendo as variáveis faltantes no `.env`
+- Crie o arquivo `.env.local` no projeto **backend** preenchendo as variáveis que faltam no `.env`
 > Para o **backend** `.env` não possuí os dados de **ADMIN** nem **SMTP**
 
-> Para o **frontend**, adicionar o link do backend (http://localhost:3000) ou do Heroku
-
-- Na pasta do projeto:
-    - Faça a migração do banco de dados (se necessário):
-      ```bash
-      docker compose run --rm migration
-      ```
-    - Inicie o backend:
-      ```bash
-      docker compose up -d api
-      ```
-    - Inicie o frontend: Na pasta do projeto:
-    ```bash
-      docker compose up -d front
-    ```
+Na pasta `raiz` do projeto:
+- Faça a migração do banco de dados (se necessário):
+  ```bash
+  docker compose run --rm migration
+  ```
+- Inicie o backend:
+  ```bash
+  docker compose up -d api
+  ```
+- Inicie o frontend: Na pasta do projeto:
+  ```bash
+  docker compose up -d front
+  ```
 
 ---
     
 | Backend                                  | Frontend                                  |
 |------------------------------------------|-------------------------------------------|
-| O backend deverá abrir na porta **3000** | O frontend deverá abrir na porta **3005** |
+| O backend deverá abrir na porta **[3000](http://localhost:3000)** | O frontend deverá abrir na porta **[3005](http://localhost:3005)** |
 
 ---
 
@@ -69,11 +92,3 @@ Os projetos de [Frontend](https://github.com/MeConta/me-conta-frontend) e [Backe
 | [Backend](https://me-conta-backend.herokuapp.com)| [Frontend](https://me-conta-frontend.herokuapp.com) | [Storybook](https://me-conta-storybook.herokuapp.com) | 
 
 ---
-
-## Atualizando a codebase ##
-
-Para atualizar os submodules ao dar pull utilizar:
-
-```bash
-git pull --recurse-submodules
-```
