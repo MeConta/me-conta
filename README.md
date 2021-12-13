@@ -15,8 +15,6 @@ Wrapper do projeto **Me conta?**.
 
 * [Node](https://nodejs.org/)
 * [Docker](https://www.docker.com/products/docker-desktop)
-* ~~[Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)~~
-(Não é **necessário**)
 
 ---
 
