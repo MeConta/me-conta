@@ -45,7 +45,9 @@ git checkout origin main
 Para desenvolvimento local, é necessário criar os arquivos `.env.local` correspondentes
 > Para o **frontend**, adicionar o _link_ do backend [local](http://localhost:3000) ou do [Heroku](https://me-conta-backend.herokuapp.com)
 
-> Para o **backend** `.env` não possui os dados de **ADMIN** nem **SMTP**
+> Para o **backend**, preencha os seguintes campos:
+> - ADMIN_EMAIL=<seu-email>
+> - ADMIN_PASSWORD=<senha-qualquer>
 
 ---
 
