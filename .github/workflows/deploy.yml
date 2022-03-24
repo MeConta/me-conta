@@ -119,10 +119,19 @@ jobs:
     needs:
       - analysis
       - migration
+    services:
+      sqlite:
+        image: nouchka/sqlite3:latest
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
+      - name: E2E Tests
+        working-directory: backend
+        run: | 
+          cp .env .env.test
+          npm run test:e2e
+        # env: 
       - name: Login no Heroku Container
         working-directory: backend
         env:
