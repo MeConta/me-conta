@@ -8,6 +8,9 @@ on:
 jobs:
   analysis:
     runs-on: ubuntu-latest
+    services:
+      sqlite:
+        image: nouchka/sqlite3:latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -25,6 +28,11 @@ jobs:
       - name: FRONTEND - Run Tests
         working-directory: frontend
         run: npm run coverage
+      - name: E2E Tests
+        working-directory: backend
+        run: | 
+          cp .env .env.test
+          npm run test:e2e
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -119,19 +127,10 @@ jobs:
     needs:
       - analysis
       - migration
-    services:
-      sqlite:
-        image: nouchka/sqlite3:latest
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
-      - name: E2E Tests
-        working-directory: backend
-        run: | 
-          cp .env .env.test
-          npm run test:e2e
-        # env: 
       - name: Login no Heroku Container
         working-directory: backend
         env:
