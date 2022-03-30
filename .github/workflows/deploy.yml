@@ -87,8 +87,9 @@ jobs:
           working-directory: frontend
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+            PORT: 8080
           run: |
-            docker build . -f Dockerfile.storybook -t storybook
+            docker build . -f Dockerfile.storybook -t storybook --build-arg PORT
             docker tag storybook registry.heroku.com/${{ secrets.HEROKU_STORYBOOK_APP_NAME }}/web
         - name: Push Docker image to Heroku
           working-directory: frontend
