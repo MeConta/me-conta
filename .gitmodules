@@ -4,3 +4,9 @@
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/MeConta/me-conta-frontend.git
+[submodule "me-conta-qa-frontend"]
+	path = me-conta-qa-frontend
+	url = https://github.com/MeConta/me-conta-qa-frontend.git
+[submodule "me-conta-qa-backend"]
+	path = me-conta-qa-backend
+	url = https://github.com/MeConta/me-conta-qa-backend.git
