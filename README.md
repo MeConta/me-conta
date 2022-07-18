@@ -41,17 +41,6 @@ cd ./backend
 git checkout origin main
 ```
 
-### .env
-Para desenvolvimento local, é necessário criar os arquivos `.env.local` correspondentes
-> Para o **frontend**, criar à variável `NEXT_PUBLIC_API_URL` e adicionar o _link_ do backend [local](http://localhost:3000) ou do [Heroku](https://me-conta-backend.herokuapp.com), como no exemplo abaixo:
-> - NEXT_PUBLIC_API_URL=http://localhost:3000
-
-> Para o **backend**, preencha os seguintes campos:
-> - ADMIN_EMAIL=<seu-email>
-> - ADMIN_PASSWORD=<senha-qualquer>
-
----
-
 ## :whale: Rodar com o Docker compose ##
 
 - Crie o arquivo `.env.local` no projeto **backend** preenchendo as variáveis que faltam no `.env`
