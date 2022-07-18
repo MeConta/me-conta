@@ -43,7 +43,8 @@ git checkout origin main
 
 ### .env
 Para desenvolvimento local, é necessário criar os arquivos `.env.local` correspondentes
-> Para o **frontend**, adicionar o _link_ do backend [local](http://localhost:3000) ou do [Heroku](https://me-conta-backend.herokuapp.com)
+> Para o **frontend**, criar à variável `NEXT_PUBLIC_API_URL` e adicionar o _link_ do backend [local](http://localhost:3000) ou do [Heroku](https://me-conta-backend.herokuapp.com), como no exemplo abaixo:
+> - NEXT_PUBLIC_API_URL=http://localhost:3000
 
 > Para o **backend**, preencha os seguintes campos:
 > - ADMIN_EMAIL=<seu-email>
@@ -59,16 +60,18 @@ Para desenvolvimento local, é necessário criar os arquivos `.env.local` corres
 Na pasta `raiz` do projeto:
 - Faça a migração do banco de dados (se necessário):
   ```bash
-  docker compose run --rm migration
+  docker-compose run --rm migration
   ```
 - Inicie o backend:
   ```bash
-  docker compose up -d api
+  docker-compose up -d api
   ```
-- Inicie o frontend: Na pasta do projeto:
+- <s>Inicie o frontend: Na pasta do projeto</s> Atualmente o comando abaixo não está funcionando corretamente para desenvolvimento local. Para rodá-lo siga o passo a passo no [README](https://github.com/MeConta/me-conta-frontend/blob/main/README.md)
+  <s>
   ```bash
-  docker compose up -d front
+  docker-compose up -d front
   ```
+  </s>
 
 ---
     
@@ -78,10 +81,13 @@ Na pasta `raiz` do projeto:
 
 ---
 
+## 👣 Check in dance
+[Passos](https://github.com/MeConta/me-conta/blob/main/check-in-dance.md) para atualizar as mudanças locais no github
+
 ## :robot: Deploy ##
 
 
-Por meio do [Github Actions](https://github.com/features/actions) todos os **commits** e **Pull requests** feitos na *main* iniciam o processo automático de deploy.
+Por meio do [Github Actions](https://github.com/features/actions) todos os **commits** e **Pull requests** feitos na *main* dos **SUBPROJETOS** iniciam o processo automático de deploy.
 
 Os projetos de [Frontend](https://github.com/MeConta/me-conta-frontend) e [Backend](https://github.com/MeConta/me-conta-backend) serão disponibilizados no [Heroku](https://heroku.com)
 
