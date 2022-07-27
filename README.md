@@ -84,6 +84,6 @@ Os projetos de [Frontend](https://github.com/MeConta/me-conta-frontend) e [Backe
 ### Links do **Heroku** ###
 | BACKEND                                          | FRONTEND                                            | HEROKU                                                |
 |--------------------------------------------------|-----------------------------------------------------|-------------------------------------------------------|
-| [Backend](https://me-conta-backend.herokuapp.com)| [Frontend](https://me-conta-frontend.herokuapp.com) | [Storybook](https://me-conta-storybook.herokuapp.com) | 
+| [Backend](https://me-conta-backend.herokuapp.com)| [Frontend](https://me-conta-frontend.herokuapp.com) | [Storybook](https://me-conta-story-book.herokuapp.com) | 
 
 ---
